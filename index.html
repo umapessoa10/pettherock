@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pet the rock</title>
+	<style type="text/css">
+		* {
+			margin: 0px;
+			padding: 0px;
+		}
+		body {
+			background: url(images/bg.svg);
+			background-size: 100% auto;
+			background-position-x: center;
+			display: flex;
+			justify-content: center;
+			align-content: center;
+			font-family: 'Trebuchet MS';
+		}
+
+		.rock-container {
+			display: flex;
+			justify-content: center;
+			align-content: center;
+			width: 50%;
+			height: 90%;
+			background-color: yellow;
+		}
+
+		.rock-div {
+			width: 50%;
+			height: auto;
+		}
+
+		.rock-div img {
+			width: 90%;
+			height: auto;
+			cursor: pointer;
+			transition: 0.2s ease;
+		}
+
+		.rock-div img:hover {
+			transform: scale(1.1);
+		}
+
+		.rock-div img:active {
+			transition: 0s ease;
+			filter: brightness(0.5);
+		}
+
+		.rock-name-input {
+			padding: 5px;
+			font-size: 30px;
+			border-radius: 5px;
+			text-align: center;
+		}
+
+		.rock-perks {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 350px;
+			background-color: rgb(160, 203, 252);
+		}
+
+		.icon-perks {
+			width: 100%;
+			height: 12vw;
+			background-color: yellow;
+			overflow: scroll;
+			display: grid;
+			grid-template-columns: 70px 70px 70px 70px 70px;
+			grid-template-rows: 70px;
+		}
+
+		.icon-perks::-webkit-scrollbar {
+			display: none;
+		}
+
+		.perk {
+			width: 70px;
+			height: 70px;
+			border: 5px white solid;
+			overflow: hidden;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.perk img {
+			height: 95%;
+			width: auto;
+		}
+
+		.perk .perk-description {
+			width: 350px;
+			height: 12vw;
+			position: absolute;
+			left: 350px;
+			top: 0;
+			background-color: blue;
+			display: none;
+			padding: 15px;
+			color: white;
+		}
+
+		.perk:hover .perk-description {
+			display: block;
+		}
+
+		.eye {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-color: white;
+			border: 3px solid black;
+		}
+
+		.eyes {
+			position: absolute;
+			top: 30%;
+			left: 48%;
+			width: 10%;
+			display: flex;
+			justify-content: space-between;
+			transform: translate(-50%, -50%);
+		}
+
+		.pupil {
+			width: 50%;
+			height: 50%;
+			border-radius: 50%;
+			background-color: black;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div class="rock-container">
+		<div class="rock-div">
+			<center><input class="rock-name-input" value="My Rock" placeholder="My Rock name..."></center>
+			<img class="rock" src="images/rock.png">
+			<div class="eyes">
+				<div class="eye">
+					<div class="pupil">
+					</div>
+				</div>
+				<div class="eye">
+					<div class="pupil">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div><input type="checkbox" name="crossed-eye" id="crossed-eye"> <span>Crossed-eye</span></div>
+		<!--<button>Option for CPS 1</button>
+		<button>Option for CPS 2</button>
+		<button>Option for CPS 3</button>
+		<button>Option for CPS 4</button>-->
+	</div>
+	<div class="rock-perks">
+		<h1 class="rps-counter">Rocks: </h1>
+		<div class="icon-perks">
+			<div class="perk">
+				<img src="images/rock.png" alt="">
+				<div class="perk-description">
+					<h1>Perk 1</h1><br>
+					<p>Description of <span style="color: greenyellow; font-weight: bold;">Perk1</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		const rock = document.querySelector('.rock');
+		const pupils = document.querySelectorAll('.pupil');
+		const crossedEye = document.getElementById('crossed-eye')
+		const rpsCounter = document.querySelector('.rps-counter');
+
+		let crossedEyeStatus = false;
+		let rocks = 0;
+		let rps = 0; //rocks per second
+		let rpc = 1; //rocks per click
+
+		crossedEye.addEventListener("change", e => {
+			if (crossedEyeStatus) {
+				crossedEyeStatus = false;
+			}else{
+				crossedEyeStatus = true;
+			}
+		});
+
+		rock.addEventListener("click", e => {
+			rocks += rpc;
+			updateCookieStatus()
+
+
+
+
+			// Create an image element for the effect
+			let effect = document.createElement('img');
+			effect.src = "images/rock.png"; // Make sure the URL is correct
+			effect.style.width = "30px";
+			effect.style.height = "auto";
+			effect.style.position = "absolute";
+
+			// Calculate the position based on the click event
+			const offsetY = 30; // Adjust this value to control how high it goes
+			const initialY = e.clientY - offsetY - 15; // Adjusted position to go up
+			effect.style.top = initialY + "px";
+			effect.style.left = e.clientX + Math.random() * 30 - 15 + "px"; // Use clientX for horizontal positioning
+
+			// Append the effect to the parent node of the '.rock' element
+			rock.parentNode.appendChild(effect);
+
+			// Set an interval to make it go up and remove it when it reaches the top
+			const moveInterval = setInterval(() => {
+				const currentY = parseInt(effect.style.top);
+				if (currentY > 50) {
+					effect.style.top = (currentY - 1) + "px"; // Adjust the speed by changing the number
+				} else {
+					clearInterval(moveInterval); // Stop the interval when it reaches the top
+					effect.remove(); // Remove the effect after it reaches the top
+				}
+			}, 2); // Adjust the interval speed as needed (smaller value makes it faster)
+
+			// Make the movable eye effect
+			if (crossedEyeStatus == true) {
+				pupils.forEach(pupil => {
+					pupil.style.transform = "translate(" + Math.random() * 20 + "px, " + Math.random() * 20 + "px)"; // Random positions
+				});
+			}else{
+				let whereToPoint = "translate(" + Math.random() * 20 + "px, " + Math.random() * 20 + "px)";
+				pupils.forEach(pupil => {
+					pupil.style.transform = whereToPoint;
+				})
+			}
+			
+		});
+
+		function updateCookieStatus() {
+			rpsCounter.textContent = "Rocks: " + rocks; 
+		}
+
+
+	</script>
+</body>
+</html>
